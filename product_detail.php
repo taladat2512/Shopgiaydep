@@ -46,8 +46,8 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết sản phẩm</title>
-    <link rel="stylesheet" href="css/header_product.css">
     <link rel="stylesheet" href="css/product_detail.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
@@ -65,9 +65,29 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
                     <button type="submit">Tìm kiếm</button>
                 </form>
                 <div class="right-nav">
-                    <span>Xin chào, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
-                    <a href="logout.php">🔒 Đăng xuất</a>
-                </div>
+                <?php if (isset($_SESSION['username'])): ?>
+                    <!-- Khi đã đăng nhập -->
+                    <?php 
+                        // Lấy ảnh đại diện từ session hoặc ảnh mặc định
+                        $profileImg = isset($_SESSION['profile_img']) && !empty($_SESSION['profile_img']) ? $_SESSION['profile_img'] : 'img/default-avatar.jpg';
+                    ?>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">
+                            <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Avatar" class="profile-img">
+                            <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="profile.php"><i class="fas fa-user"></i> Trang cá nhân</a>
+                            <a href="order.php"><i class="fa-solid fa-cart-shopping"></i>Đơn hàng</a>
+                            <a href="change_password.php"><i class="fas fa-key"></i> Thay đổi mật khẩu</a>
+                            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <!-- Khi chưa đăng nhập -->
+                    <a href="login.php">🔑 Đăng nhập</a>
+                <?php endif; ?>
+            </div>
             </nav>
         </div>
     </header>
@@ -75,13 +95,6 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
     <!-- Chi tiết sản phẩm -->
     <div class="product-detail-container">
         <div class="product-gallery">
-            <div class="thumbnail-list">
-                <img src="img/sp1.jpg" class="thumbnail active" alt="Góc 1">
-                <img src="img/sp2.jpg" class="thumbnail" alt="Góc 2">
-                <img src="img/sp3.jpg" class="thumbnail" alt="Góc 3">
-                <img src="img/sp4.jpg" class="thumbnail" alt="Góc 4">
-                <img src="img/sp5.jpg" class="thumbnail" alt="Góc 5">
-            </div>
             <div class="main-image">
                 <img src="<?php echo $product['image']; ?>" id="main-product-image" alt="Sản phẩm chính">
             </div>
@@ -173,6 +186,21 @@ if (isset($_GET['product_id']) && is_numeric($_GET['product_id'])) {
                 mainImage.src = this.src;
             });
         });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const dropdown = document.querySelector(".dropdown");
+    const toggleButton = document.querySelector(".dropdown-toggle");
+
+    toggleButton.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle("active");
+    });
+
+    document.addEventListener("click", function () {
+        dropdown.classList.remove("active");
+    });
+});
     </script>
 </body>
 </html>

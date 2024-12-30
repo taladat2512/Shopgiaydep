@@ -89,6 +89,9 @@ p a {
     font-size: 14px;
     margin-top: 20px;
 }
+p{
+    margin-top: 10px;
+}
 
 p a:hover {
     text-decoration: underline;

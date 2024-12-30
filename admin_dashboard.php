@@ -56,6 +56,7 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
             <li><a href="manage_users.php">Quản lý người dùng</a></li>
             <li><a href="admin_dashboard.php">Quản lý sản phẩm</a></li>
             <li><a href="manage_orders.php">Quản lý đơn hàng</a></li>
+            <li><a href="manage_catalog.php">Quản lý danh mục</a></li>
         </ul>
     </div>
 

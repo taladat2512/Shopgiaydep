@@ -8,26 +8,81 @@
 html, body {
     height: 100%; /* Đảm bảo chiều cao của cả html và body */
     overflow: hidden; /* Ẩn toàn bộ thanh cuộn */
-}
-
-body {
-    font-family: 'Roboto', Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #f9f9f9;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    height: 100%;
     overflow-y: scroll; /* Đảm bảo cuộn dọc vẫn hoạt động */
     -ms-overflow-style: none; /* Ẩn thanh cuộn trên IE và Edge */
     scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
 }
-
-body::-webkit-scrollbar {
-    display: none; /* Ẩn thanh cuộn trên Chrome, Safari và Edge */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
 }
 
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
 
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+.order-table,
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.order-table th,
+.details-table th {
+    background: #34495e;
+    color: white;
+    padding: 10px;
+    text-align: left;
+}
+
+.order-table td,
+.details-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.details-table img {
+    width: 50px;
+    height: auto;
+}
+
+.status-pending {
+    color: #e67e22;
+    font-weight: bold;
+}
+
+.status-completed {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.status-cancelled {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.details-link {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.details-link:hover {
+    color: #2980b9;
+}
 
 /* Header */
 header {
@@ -98,133 +153,12 @@ header nav .search-bar button:hover {
     background: #e67e00;
 }
 
-/* Banner */
-.banner {
-    position: relative;
-    text-align: center;
-}
-
-.banner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.banner-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
-    text-align: center;
-}
-
-.banner-overlay h1 {
-    font-size: 36px;
-    margin-bottom: 15px;
-}
-
-.banner-overlay p {
-    font-size: 18px;
-    margin-bottom: 20px;
-}
-
-.cta-button {
-    background: #ff9900;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-size: 16px;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-
-.cta-button:hover {
-    background: #e67e00;
-}
-
-/* Sản phẩm */
-.products {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
-    text-align: center;
-}
-
-.products h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.product-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 sản phẩm mỗi dòng */
-    gap: 20px; /* Khoảng cách giữa các sản phẩm */
-    max-height: calc(3 * 400px + 40px); /* 3 hàng, mỗi sản phẩm 400px chiều cao */
-    overflow-y: scroll; /* Đảm bảo cuộn dọc vẫn hoạt động */
-    -ms-overflow-style: none; /* Ẩn thanh cuộn trên IE và Edge */
-    scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
-}
-
-
-.product {
-    background: white;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.product:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.product img {
-    width: 150px;
-    height: 200px;
-    object-fit: cover;
-    margin-bottom: 10px;
-    border-radius: 5px;
-}
-
-.product h3 {
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.product .price {
-    font-size: 18px;
-    color: red;
-    margin-bottom: 15px;
-    font-weight: bold;
-}
-
-.order-button {
-    display: inline-block;
-    background: #333;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background 0.3s;
-}
-
-.order-button:hover {
-    background: #555;
-}
-
 /* Footer */
 footer {
     background: #333;
     color: white;
     padding: 20px 0;
-    margin-top: 30px;
+    margin-top: 387px;
 }
 
 footer .footer-container {
@@ -331,27 +265,6 @@ footer .logo{
 .right-nav{
     margin: 0px -20px 0px 20px;
 }
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-.pagination a {
-    display: inline-block;
-    padding: 8px 12px;
-    margin: 0 5px;
-    text-decoration: none;
-    border: 1px solid #ddd;
-    color: #333;
-    transition: all 0.3s;
-}
-.pagination a:hover {
-    background-color: #ff9900;
-    color: white;
-    border-color: #ff9900;
-}
-.pagination a.active {
-    background-color: #333;
-    color: white;
-    border-color: #333;
+tr{
+    text-align: center;
 }

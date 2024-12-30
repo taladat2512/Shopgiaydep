@@ -15,20 +15,6 @@ $result_products = $conn->query($sql_products);
 if (!$result_products) {
     die("Lỗi truy vấn sản phẩm: " . $conn->error);
 }
-
-// Xử lý xóa sản phẩm
-if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $id = $_GET['delete'];
-
-    $stmt = $conn->prepare("DELETE FROM product WHERE product_id = ?");
-    $stmt->bind_param("i", $id);
-    if ($stmt->execute()) {
-        header("Location: admin_dashboard.php");
-        exit();
-    } else {
-        echo "Có lỗi xảy ra khi xóa sản phẩm.";
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +27,7 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <!-- Thanh menu dọc bên trái -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <h2>Trang chủ Admin</h2>
@@ -53,9 +39,9 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
         </ul>
     </div>
 
-    <!-- Nội dung chính -->
+    <!-- Main content -->
     <div class="main-content">
-    <div class="topbar">
+        <div class="topbar">
             <div class="topbar-left">
                 <a href="index.php" class="home-icon">🏠 Trang chủ</a>
             </div>
@@ -66,10 +52,9 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
             </div>
         </div>
 
-        <!-- Bảng quản lý sản phẩm -->
+        <!-- Table -->
         <div class="container">
             <h1>Quản lý sản phẩm</h1>
-            <a href="admin_dashboard.php" class="add-product-button">⏪Quay lại</a>
             <table>
                 <thead>
                     <tr>
@@ -102,7 +87,16 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
                             <td><textarea class="description" data-id="<?php echo $row['product_id']; ?>"><?php echo $row['description']; ?></textarea></td>
                             <td><input type="number" class="price" value="<?php echo $row['price']; ?>" data-id="<?php echo $row['product_id']; ?>"></td>
                             <td><input type="number" class="quantity" value="<?php echo $row['quantity']; ?>" data-id="<?php echo $row['product_id']; ?>"></td>
-                            <td><img src="<?php echo $row['image']; ?>" width="50"></td>
+                            <td>
+                                <form class="upload-form" data-id="<?php echo $row['product_id']; ?>" enctype="multipart/form-data">
+                                    <img src="<?php echo $row['image']; ?>" class="product-img">
+                                    <div class="file-upload-row">
+                                        <label for="file-<?php echo $row['product_id']; ?>" class="file-label">Chọn tệp</label>
+                                        <input type="file" id="file-<?php echo $row['product_id']; ?>" name="image" class="image-upload" data-id="<?php echo $row['product_id']; ?>">
+                                        <button type="button" class="upload-image-button" data-id="<?php echo $row['product_id']; ?>">Upload</button>
+                                    </div>
+                                </form>
+                            </td>
                             <td>
                                 <select class="status" data-id="<?php echo $row['product_id']; ?>">
                                     <option value="available" <?php if ($row['status'] == 'available') echo 'selected'; ?>>Available</option>
@@ -120,8 +114,9 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     </div>
 
     <script>
-        $(document).ready(function() {
-            $(".update-button").click(function() {
+        $(document).ready(function () {
+            // Cập nhật sản phẩm
+            $(".update-button").click(function () {
                 var productId = $(this).data('id');
                 var name = $(".name[data-id='" + productId + "']").val();
                 var description = $(".description[data-id='" + productId + "']").val();
@@ -142,12 +137,42 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
                         catalog_id: catalogId,
                         status: status
                     },
-                    success: function(response) {
+                    success: function (response) {
                         alert("Cập nhật thành công!");
                         location.reload();
                     },
-                    error: function() {
+                    error: function () {
                         alert("Có lỗi xảy ra khi cập nhật sản phẩm.");
+                    }
+                });
+            });
+
+            // Upload ảnh sản phẩm
+            $(".upload-image-button").click(function () {
+                var productId = $(this).data("id");
+                var formData = new FormData();
+                var fileInput = $(".image-upload[data-id='" + productId + "']")[0].files[0];
+
+                if (!fileInput) {
+                    alert("Vui lòng chọn một ảnh!");
+                    return;
+                }
+
+                formData.append("product_id", productId);
+                formData.append("image", fileInput);
+
+                $.ajax({
+                    url: "upload_image.php",
+                    method: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        alert("Ảnh đã được cập nhật thành công!");
+                        location.reload(); // Tải lại trang
+                    },
+                    error: function () {
+                        alert("Có lỗi xảy ra khi cập nhật ảnh.");
                     }
                 });
             });

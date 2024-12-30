@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý người dùng</title>
-    <link rel="stylesheet" href="css/manage_users.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
     <!-- Thanh menu dọc bên trái -->
@@ -89,6 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container">
     <h1>Quản lý người dùng</h1>
     <table>
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>Tên đăng nhập</th>
@@ -99,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <th>Trạng thái</th>
                 <th>Hành động</th>
             </tr>
+            </thead>
         <tbody>
             <?php while ($row = $result_users->fetch_assoc()) { ?>
                 <tr>

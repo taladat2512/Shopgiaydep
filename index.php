@@ -1,29 +1,56 @@
-<?php 
+<?php
 session_start();
 include('db.php');
 
+// Số sản phẩm trên mỗi trang
+$items_per_page = 9; // Hiển thị 3 dòng, mỗi dòng 3 sản phẩm
 
-
-// Lấy danh sách sản phẩm từ bảng "product"
-$sql = "SELECT * FROM product";
-$result = $conn->query($sql);
+// Xác định trang hiện tại
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+if ($page < 1) {
+    $page = 1;
+}
+$items_per_page = 8;
+// Tính toán offset cho truy vấn SQL
+$offset = ($page - 1) * $items_per_page;
 
 // Lọc theo từ khóa tìm kiếm
 $search = '';
+$where_clause = '';
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
-
-    // Sử dụng prepared statement để bảo mật SQL
-    $stmt = $conn->prepare("SELECT * FROM product WHERE name LIKE ?");
-    $searchTerm = "%" . $search . "%";
-    $stmt->bind_param("s", $searchTerm); // Tránh SQL Injection
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $where_clause = "WHERE name LIKE ?";
 }
 
-// Lấy danh mục catalog
-$sql_catalog = "SELECT * FROM catalog";
-$catalog_result = $conn->query($sql_catalog);
+// Lấy tổng số sản phẩm
+$total_items_query = "SELECT COUNT(*) as total FROM product $where_clause";
+if ($where_clause) {
+    $stmt = $conn->prepare($total_items_query);
+    $searchTerm = "%" . $search . "%";
+    $stmt->bind_param("s", $searchTerm);
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else {
+    $result = $conn->query($total_items_query);
+}
+$total_items = $result->fetch_assoc()['total'];
+
+// Tính tổng số trang
+$total_pages = ceil($total_items / $items_per_page);
+
+// Lấy danh sách sản phẩm cho trang hiện tại
+$product_query = "SELECT * FROM product $where_clause LIMIT ? OFFSET ?";
+if ($where_clause) {
+    $stmt = $conn->prepare($product_query);
+    $stmt->bind_param("sii", $searchTerm, $items_per_page, $offset);
+    $stmt->execute();
+    $product_result = $stmt->get_result();
+} else {
+    $stmt = $conn->prepare($product_query);
+    $stmt->bind_param("ii", $items_per_page, $offset);
+    $stmt->execute();
+    $product_result = $stmt->get_result();
+}
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +60,7 @@ $catalog_result = $conn->query($sql_catalog);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang chủ Giày Dép</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <!-- Header: Thanh menu và tìm kiếm -->
@@ -51,18 +78,27 @@ $catalog_result = $conn->query($sql_catalog);
                     <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." value="<?php echo htmlspecialchars($search); ?>">
                     <button type="submit">Tìm kiếm</button>
                 </form>
-                <!-- Tên người dùng và đăng xuất ở góc phải -->
-                    <div class="right-nav">
-                <?php if (isset($_SESSION['username'])): ?>
-                    <!-- Khi đã đăng nhập -->
-                <span>Xin chào, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
-                <a href="logout.php">🔒 Đăng xuất</a>
-                <?php else: ?>
-                <!-- Khi chưa đăng nhập -->
-                <a href="login.php">🔑 Đăng nhập</a>
-                <?php endif; ?>
-            </div>
-
+                <!-- Tên người dùng và ảnh đại diện -->
+                <div class="right-nav">
+                    <?php if (isset($_SESSION['username'])): ?>
+                        <!-- Khi đã đăng nhập -->
+                        <div class="dropdown">
+                            <button class="dropdown-toggle">
+                                <img src="<?php echo htmlspecialchars($_SESSION['profile_img'] ?? 'img/default-avatar.jpg'); ?>" alt="Avatar" class="profile-img">
+                                <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="profile.php"><i class="fas fa-user"></i> Trang cá nhân</a>
+                                <a href="order.php"><i class="fa-solid fa-cart-shopping"></i>Đơn hàng</a>
+                                <a href="change_password.php"><i class="fas fa-key"></i> Thay đổi mật khẩu</a>
+                                <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <!-- Khi chưa đăng nhập -->
+                        <a href="login.php">🔑 Đăng nhập</a>
+                    <?php endif; ?>
+                </div>
             </nav>
         </div>
     </header>
@@ -81,8 +117,8 @@ $catalog_result = $conn->query($sql_catalog);
     <div class="products" id="products">
         <h2>Sản phẩm nổi bật</h2>
         <div class="product-list">
-            <?php if ($result->num_rows > 0): ?>
-                <?php while ($row = $result->fetch_assoc()) { ?>
+            <?php if ($product_result->num_rows > 0): ?>
+                <?php while ($row = $product_result->fetch_assoc()) { ?>
                     <div class="product">
                         <?php 
                             // Kiểm tra ảnh tồn tại
@@ -104,6 +140,17 @@ $catalog_result = $conn->query($sql_catalog);
         </div>
     </div>
 
+    <!-- Phân trang -->
+    <div class="pagination">
+        <?php if ($total_pages > 1): ?>
+            <span>Trang: </span>
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <a href="index.php?page=<?php echo $i; ?><?php echo $search ? '&search=' . urlencode($search) : ''; ?>" 
+                   class="<?php echo $i == $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
+            <?php endfor; ?>
+        <?php endif; ?>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="footer-container">
@@ -120,5 +167,20 @@ $catalog_result = $conn->query($sql_catalog);
             </div>
         </div>
     </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dropdown = document.querySelector(".dropdown");
+            const toggleButton = document.querySelector(".dropdown-toggle");
+
+            toggleButton.addEventListener("click", function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle("active");
+            });
+
+            document.addEventListener("click", function () {
+                dropdown.classList.remove("active");
+            });
+        });
+    </script>
 </body>
 </html>

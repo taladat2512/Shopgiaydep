@@ -156,3 +156,11 @@ footer .footer-contact p {
     margin: 0;
     font-size: 14px;
 }
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover; /* Cắt ảnh theo khung tròn */
+    margin-right: 10px;
+    vertical-align: middle;
+}

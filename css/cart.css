@@ -99,8 +99,7 @@ footer {
     background: #333;
     color: white;
     padding: 20px 0;
-    margin-top: 13  0px;
-    margin: 160px 0px 0px;
+    margin-top: 230px;
 }
 
 footer .footer-container {
@@ -263,4 +262,84 @@ footer .logo{
 .action-buttons .remove-btn:hover {
     background-color: #a71d2a;
     transform: scale(1.05);
+}
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover; /* Cắt ảnh theo khung tròn */
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover; /* Cắt ảnh theo khung tròn */
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Định dạng dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+}
+
+.username {
+    font-size: 16px;
+    font-weight: 500;
+    color:white;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: auto;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    z-index: 10;
+    width: 170px;
+    text-align: center;
+}
+
+.dropdown-menu a {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #333;
+    text-align: center;
+}
+
+.dropdown-menu a i {
+    margin-right: 8px;
+    text-align: center;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+/* Hiển thị menu */
+.dropdown.active .dropdown-menu {
+    display: block;
+    align-items: center;
+}
+
+.right-nav{
+    margin: 0px -20px 0px 20px;
 }

@@ -6,15 +6,26 @@
     text-decoration: none;
 }
 
+html, body {
+    height: 100%; /* Đảm bảo chiều cao của cả html và body */
+    overflow: hidden; /* Ẩn toàn bộ thanh cuộn */
+}
+
 body {
     font-family: 'Roboto', Arial, sans-serif;
+    line-height: 1.6;
     background-color: #f9f9f9;
     color: #333;
     margin: 0;
     padding: 0;
-    overflow-y: scroll;
+    height: 100%;
+    overflow-y: scroll; /* Đảm bảo cuộn dọc vẫn hoạt động */
+    -ms-overflow-style: none; /* Ẩn thanh cuộn trên IE và Edge */
+    scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
 }
-
+body::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn trên Chrome, Safari và Edge */
+}
 /* Header */
 header {
     background: #333;
@@ -269,4 +280,83 @@ input[type="text"]:focus, select:focus {
 
 .checkout-btn:hover {
     background: #ff5040;
+}
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover; /* Cắt ảnh theo khung tròn */
+    margin-right: 10px;
+    vertical-align: middle;
+}
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover; /* Cắt ảnh theo khung tròn */
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Định dạng dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+}
+
+.username {
+    font-size: 16px;
+    font-weight: 500;
+    color:white;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: auto;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    z-index: 10;
+    width: 170px;
+    text-align: center;
+}
+
+.dropdown-menu a {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #333;
+    text-align: center;
+}
+
+.dropdown-menu a i {
+    margin-right: 8px;
+    text-align: center;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+/* Hiển thị menu */
+.dropdown.active .dropdown-menu {
+    display: block;
+    align-items: center;
+}
+
+.right-nav{
+    margin: 0px -20px 0px 20px;
 }

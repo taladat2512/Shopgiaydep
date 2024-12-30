@@ -1,14 +1,12 @@
 <?php
-// Kết nối database và lấy dữ liệu giỏ hàng
 session_start();
 include('db.php');
 
-// Kiểm tra nếu chưa đăng nhập thì chuyển về trang đăng nhập
-if (!isset($_SESSION['username'])) {
+// Kiểm tra nếu chưa đăng nhập
+if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
 }
-
 // Lọc theo từ khóa tìm kiếm
 $search = '';
 if (isset($_GET['search'])) {
@@ -17,26 +15,33 @@ if (isset($_GET['search'])) {
     // Sử dụng prepared statement để bảo mật SQL
     $stmt = $conn->prepare("SELECT * FROM product WHERE name LIKE ?");
     $searchTerm = "%" . $search . "%";
-    $stmt->bind_param("s", $searchTerm); // Tránh SQL Injection
+    $stmt->bind_param("s", $searchTerm);
     $stmt->execute();
     $result = $stmt->get_result();
 }
-// Lấy user_id từ session
 $user_id = $_SESSION['user_id'];
 
-// Truy vấn lấy dữ liệu giỏ hàng
-$query = "SELECT o.quantity, o.size, p.name, p.image, p.price, p.product_id 
-          FROM `order` o 
-          JOIN product p ON o.product_id = p.product_id 
-          WHERE o.user_id = ?";
-$stmt = $conn->prepare($query);
-
-// Kiểm tra nếu truy vấn chuẩn bị không thành công
-if (!$stmt) {
-    die("Lỗi truy vấn SQL: " . $conn->error);
-}
-
+// Lấy transaction_id
+$stmt = $conn->prepare("SELECT transaction_id FROM transaction WHERE user_id = ? AND status = 'pending'");
 $stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    die("Giỏ hàng của bạn trống.");
+}
+$transaction = $result->fetch_assoc();
+$transaction_id = $transaction['transaction_id'];
+
+// Lấy sản phẩm trong giỏ hàng
+$stmt = $conn->prepare("
+    SELECT o.order_id, o.product_id, o.quantity, o.size, o.total_amount, 
+           p.name, p.image, p.price 
+    FROM `order` o
+    JOIN product p ON o.product_id = p.product_id
+    WHERE o.transaction_id = ?
+");
+$stmt->bind_param("i", $transaction_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -48,6 +53,7 @@ $result = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giỏ hàng của bạn</title>
     <link rel="stylesheet" href="css/cart.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 <header>
@@ -64,10 +70,29 @@ $result = $stmt->get_result();
                 <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." value="<?php echo htmlspecialchars($search); ?>">
                 <button type="submit">Tìm kiếm</button>
             </form>
-            <!-- Tên người dùng và đăng xuất ở góc phải -->
             <div class="right-nav">
-                <span>Xin chào, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
-                <a href="logout.php">🔒 Đăng xuất</a>
+                <?php if (isset($_SESSION['username'])): ?>
+                    <!-- Khi đã đăng nhập -->
+                    <?php 
+                        // Lấy ảnh đại diện từ session hoặc ảnh mặc định
+                        $profileImg = isset($_SESSION['profile_img']) && !empty($_SESSION['profile_img']) ? $_SESSION['profile_img'] : 'img/default-avatar.jpg';
+                    ?>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">
+                            <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Avatar" class="profile-img">
+                            <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="profile.php"><i class="fas fa-user"></i> Trang cá nhân</a>
+                            <a href="order.php"><i class="fa-solid fa-cart-shopping"></i>Đơn hàng</a>
+                            <a href="change_password.php"><i class="fas fa-key"></i> Thay đổi mật khẩu</a>
+                            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <!-- Khi chưa đăng nhập -->
+                    <a href="login.php">🔑 Đăng nhập</a>
+                <?php endif; ?>
             </div>
         </nav>
     </div>
@@ -174,6 +199,20 @@ $result = $stmt->get_result();
                 });
         }
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const dropdown = document.querySelector(".dropdown");
+    const toggleButton = document.querySelector(".dropdown-toggle");
+
+    toggleButton.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle("active");
+    });
+
+    document.addEventListener("click", function () {
+        dropdown.classList.remove("active");
+    });
+});
 </script>
 <!-- Footer -->
 <footer>

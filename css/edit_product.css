@@ -221,10 +221,3 @@ a:hover {
 td{
     text-align: center;
 }
-
-.admin-name{
-    gap: 40px;
-}
-.logout-button{
-    margin-left:30px ;
-}

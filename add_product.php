@@ -21,8 +21,9 @@ if (isset($_POST['submit'])) {
     $name = trim($_POST['name']);
     $description = trim($_POST['description']);
     $price = $_POST['price'];
-    $quantity = $_POST['quantity'];  // Kiểm tra xem giá trị này có đúng không
-    $catalog_id = $_POST['catalog_id']; // Lấy catalog_id từ form
+    $quantity = $_POST['quantity'];
+    $catalog_id = $_POST['catalog_id'];
+    $available_sizes = "36,37,38,39,40"; // Mặc định các kích thước sẵn có
 
     // Kiểm tra dữ liệu đầu vào (nếu cần)
     if (empty($name) || empty($description) || empty($price) || empty($quantity) || empty($catalog_id)) {
@@ -61,9 +62,9 @@ if (isset($_POST['submit'])) {
         }
 
         // Thêm sản phẩm vào cơ sở dữ liệu
-        $stmt = $conn->prepare("INSERT INTO product (catalog_id, name, description, price, quantity, image, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO product (catalog_id, name, description, price, quantity, image, status, available_sizes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $status = 'available'; // Mặc định trạng thái là "available"
-        $stmt->bind_param("issdiss", $catalog_id, $name, $description, $price, $quantity, $image, $status); // "issdiss" là kiểu dữ liệu (int, string, string, decimal, int, string, string)
+        $stmt->bind_param("issdisss", $catalog_id, $name, $description, $price, $quantity, $image, $status, $available_sizes);
 
         if ($stmt->execute()) {
             echo "<p class='success'>Sản phẩm đã được thêm thành công!</p>";

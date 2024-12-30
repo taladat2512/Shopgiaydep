@@ -6,8 +6,6 @@ $error_message = ""; // Biến lưu trữ thông báo lỗi
 if (isset($_POST['register'])) {
     $username = $_POST['username'];
     $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $address = $_POST['address'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
@@ -70,12 +68,6 @@ if (isset($_POST['register'])) {
 
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
-
-            <label for="phone">Số điện thoại:</label>
-            <input type="text" id="phone" name="phone" required>
-
-            <label for="address">Địa chỉ:</label>
-            <input type="text" id="address" name="address" required>
 
             <label for="password">Mật khẩu:</label>
             <input type="password" id="password" name="password" required>
