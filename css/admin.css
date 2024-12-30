@@ -1,11 +1,25 @@
-/* Reset */
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    box-sizing: border-box;
+
+html, body {
+    height: 100%; /* Đảm bảo chiều cao của cả html và body */
+    overflow: hidden; /* Ẩn toàn bộ thanh cuộn */
 }
 
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-y: scroll; /* Đảm bảo cuộn dọc vẫn hoạt động */
+    -ms-overflow-style: none; /* Ẩn thanh cuộn trên IE và Edge */
+    scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
+}
+
+body::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn trên Chrome, Safari và Edge */
+}
 /* Sidebar */
 .sidebar {
     width: 200px;
@@ -108,7 +122,7 @@ table thead th {
     background-color: #34495e;
     color: white;
     padding: 10px;
-    text-align: left;
+    text-align: center;
     border: 1px solid #ddd;
     white-space: nowrap; /* Giữ nội dung không bị xuống dòng */
 }
@@ -116,7 +130,6 @@ table thead th {
 table tbody td {
     padding: 10px;
     border: 1px solid #ddd;
-    vertical-align: top;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* Cắt nội dung nếu quá dài */
@@ -215,9 +228,6 @@ a {
     font-weight: bold;
 }
 
-a:hover {
-    color:  #ae3021;
-}
 td{
     text-align: center;
 }
@@ -228,3 +238,63 @@ td{
 .logout-button{
     margin-left:30px ;
 }
+.add-catalog-form{
+    margin: 10px 0px;
+}
+.col-transaction-id {
+    width: 5%; /* 10% của tổng chiều rộng bảng */
+}
+
+.col-name {
+    width: 15%; /* 15% của tổng chiều rộng bảng */
+}
+
+.col-phone {
+    width: 8%;
+}
+
+.col-address {
+    width: 20%;
+}
+
+.col-username {
+    width: 10%;
+}
+
+.col-status {
+    width: 8%;
+}
+
+.col-approve,
+.col-details,
+.col-delete {
+    width: 5%;
+    text-align: center; /* Căn giữa các nút trong các cột nhỏ */
+}
+
+.col-date {
+    width: 15%;
+}
+
+.add-product-button {
+    display: inline-block;
+    background-color: #e74c3c; /* Màu xanh lá */
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-bottom: 20px;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.add-product-button:hover {
+    color: white;
+    background-color:#ae3021; /* Đổi màu khi hover */
+    transform: translateY(-2px); /* Hiệu ứng di chuyển lên khi hover */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+

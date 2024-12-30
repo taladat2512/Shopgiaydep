@@ -121,7 +121,7 @@ if (!$result_catalogs) {
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th class="col-transaction-id">ID</th>
                         <th>Tên danh mục</th>
                         <th>Danh mục cha</th>
                         <th>Ngày tạo</th>

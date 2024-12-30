@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <li><a href="manage_users.php">Quản lý người dùng</a></li>
             <li><a href="admin_dashboard.php">Quản lý sản phẩm</a></li>
             <li><a href="manage_orders.php">Quản lý đơn hàng</a></li>
+            <li><a href="manage_catalog.php">Quản lý danh mục</a></li>
         </ul>
     </div>
 
@@ -80,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="topbar-right">
                 <span class="notification-icon">🔔</span>
-                <span class="admin-name">Xin chào, <?php echo $_SESSION['username']; ?>!</span>
+                <span class="admin-name">Tài khoản: <?php echo $_SESSION['username']; ?>!</span>
                 <a href="logout.php" class="logout-button">Đăng xuất</a>
             </div>
         </div>
@@ -91,13 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <table>
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Tên đăng nhập</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Địa chỉ</th>
+                <th class="col-transaction-id">ID</th>
+                <th class="col-username">Tên đăng nhập</th>
+                <th class="col-name">Email</th>
+                <th class="col-phone">Phone</th>
+                <th class="col-address">Địa chỉ</th>
                 <th>Vai trò</th>
-                <th>Trạng thái</th>
+                <th class="col-status">Trạng thái</th>
                 <th>Hành động</th>
             </tr>
             </thead>

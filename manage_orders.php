@@ -69,6 +69,7 @@ if (!$result) {
             <li><a href="manage_users.php">Quản lý người dùng</a></li>
             <li><a href="admin_dashboard.php">Quản lý sản phẩm</a></li>
             <li><a href="manage_orders.php">Quản lý đơn hàng</a></li>
+            <li><a href="manage_catalog.php">Quản lý danh mục</a></li>
         </ul>
     </div>
 
@@ -92,16 +93,15 @@ if (!$result) {
             <table>
                 <thead>
                     <tr>
-                        <th>Mã đơn hàng</th>
-                        <th>Tên người nhận</th>
-                        <th>Số điện thoại</th>
-                        <th>Địa chỉ</th>
-                        <th>username</th>
-                        <th>Trạng thái</th>
-                        <th>Duyệt</th>
-                        <th>Chi tiết</th>
-                        <th>Xóa</th>
-                        <th>Ngày đặt</th>
+                        <th class="col-transaction-id">ID</th>
+                        <th class="col-name">Tên người nhận</th>
+                        <th class="col-phone">Số điện thoại</th>
+                        <th class="col-address">Địa chỉ</th>
+                        <th class="col-status">Trạng thái</th>
+                        <th class="col-approve">Duyệt</th>
+                        <th class="col-details">Chi tiết</th>
+                        <th class="col-delete">Xóa</th>
+                        <th class="col-date">Ngày đặt</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,7 +111,6 @@ if (!$result) {
                             <td><?php echo htmlspecialchars($row['username']); ?></td>
                             <td><?php echo htmlspecialchars($row['phone']); ?></td>
                             <td><?php echo htmlspecialchars($row['address']); ?></td>
-                            <td><?php echo htmlspecialchars($row['username']); ?></td>
                             <td>
                                 <?php if ($row['status'] == 'pending'): ?>
                                     <span class="status-pending">Chưa duyệt</span>

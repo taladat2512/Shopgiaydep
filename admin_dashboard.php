@@ -82,7 +82,7 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
 <table>
     <thead>
         <tr>
-            <th>STT</th>
+            <th class="col-transaction-id">STT</th>
             <th>Tên sản phẩm</th>
             <th>Giá</th>
             <th>Kích thước</th> <!-- Thêm cột kích thước -->
